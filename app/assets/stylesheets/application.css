@@ -34,6 +34,8 @@ body {
  .thoughts {
      width: 43%;
      margin: 0 29.9%;
+     font-family: Arial, Helvetica, sans-serif;
+     color: rgb(0, 123, 164);
  }
 
  .new-tweet {
@@ -44,4 +46,22 @@ body {
  .main {
      width: 40%;
      margin: 0 29.9%;
+ }
+
+ .fa-twitter, .fa-pen, .fa-trash {
+     color: rgb(0, 123, 164);
+ }
+
+ .fa-pen, .fa-trash {
+     font-size: 1.2rem;
+ }
+
+ .fa-trash {
+     float: right;
+     padding-left: 5px;
+ }
+
+ .fa-pen {
+    float: right;
+    padding-right: 5px;
  }

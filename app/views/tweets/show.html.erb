@@ -9,16 +9,20 @@
         <p class="card-text"><%= @tweet.content %></p>
         <p><%= time_ago_in_words(@tweet.created_at) %> ago</p>
         <p>Retweets: <%= @tweet.retweet %> | Likes: <%= @tweet.likes.count %></p>
-        <% if @tweet.user_id === current_user.id %>
+        <% if current_user && @tweet.user_id === current_user.id %>
+          
+          <%= link_to(@tweet, :method => 'delete', :data => { confirm: "Are you sure?"}) do %>  
+          <i class="fas fa-trash"></i>
+          <% end %>
+
           <%= link_to(edit_tweet_path(@tweet)) do %>
               <i class="fas fa-pen"></i>
           <% end %>
 
-          <%= link_to(@tweet, :method => 'delete', :data => { confirm: "Are you sure?"}) do %>  
-          <i class="fas fa-trash"></i>
-          <% end %>
         <% end %>
 
     </div>
   </div>
 </div>
+
+
