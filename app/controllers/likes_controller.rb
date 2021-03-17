@@ -59,12 +59,19 @@ class LikesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_like
-      @like = Like.find(params[:id])
+    def is_liked?
+      Like.where(user: current_user.id, tweet: params[:tweet_id]).exists?
+    end
+
+    def set_tweet
+      @tweet = Tweet.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def like_params
       params.fetch(:like, {})
+    end
+    def tweet_params
+      params.require(:tweet).permit(:content, :user_id, :origin_tweet)
     end
 end

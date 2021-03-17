@@ -22,4 +22,4 @@
 
 <br>
 
-<%= link_to 'New Like', new_like_path %>
+<%= link_to 'New Like', new_like_path(tweet), method: :post %> <%= tweet.likes.count %>

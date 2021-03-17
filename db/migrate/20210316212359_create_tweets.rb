@@ -1,10 +1,12 @@
-class CreateTweets < ActiveRecord::Migration[6.1]
+class CreateTweets < ActiveRecord::Migration[5.2]
   def change
     create_table :tweets do |t|
-      t.string :content, null: false
-      t.references  :user, foreign_key: true
-      t.integer :retweet, default: 0
-      t.references :retweet, foreign_key: { to_table: :tweets }
+      t.string :content
+      t.string :photo
+      t.integer :likes
+      t.integer :retweets
+      t.references :user, foreign_key: true
+
       t.timestamps
     end
   end

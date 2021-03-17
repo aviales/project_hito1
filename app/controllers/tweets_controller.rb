@@ -8,21 +8,54 @@ class TweetsController < ApplicationController
     current_user
     @tweets = Tweet.page(params[:page])
     @tweet = Tweet.new
+    
   end
 
   # GET /tweets/1 or /tweets/1.json
   def show
   end
 
+
+  def like
+    if current_user
+      @tweet = Tweet.find(params[:tweet_id])
+      if is_liked?
+        @tweet.remove_like(current_user)
+      else
+        @tweet.add_like(current_user)
+      end
+    else
+      redirect_to new_user_session_path
+    end
+    redirect_to root_path
+  end
+
+  def retweet
+    if current_user
+      @tweet = Tweet.find(params[:tweet_id])
+      Tweet.create(content: @tweet.content , user_id: current_user.id, origin_tweet: @tweet.id)
+    else
+      redirect_to new_user_session_path
+    end
+    redirect_to root_path
+  end
+
   # GET /tweets/new
   def new
     @tweet = Tweet.new
+    @users = User.pluck :profile_photo, :id
   end
 
   # GET /tweets/1/edit
   def edit
   end
 
+
+  def hashtags
+    tag = Tag.find_by(name: params[:name])
+    @tweets = tag.tweets
+  end
+  
   # POST /tweets or /tweets.json
   def create
 
@@ -76,6 +109,12 @@ class TweetsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    
+    def is_liked?
+      Like.where(user: current_user.id, tweet: params[:tweet_id]).exists?
+    end
+    
+    
     def set_tweet
       @tweet = Tweet.find(params[:id])
     end
