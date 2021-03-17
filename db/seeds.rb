@@ -5,3 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+86.times do
+    tweet = Tweet.create(content: Faker::TvShows::BigBangTheory.quote, 
+                user_id: [9, 10, 11].sample)
+        puts "Se ha creado un tweet"                
+end  

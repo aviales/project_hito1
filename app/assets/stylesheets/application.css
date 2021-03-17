@@ -13,3 +13,35 @@
  *= require_tree .
  *= require_self
  */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+}
+
+ .avatar-img {
+     width: 2rem;
+     height: 2rem;
+     border-radius: 50%;
+ }
+ 
+ .thoughts {
+     width: 43%;
+     margin: 0 29.9%;
+ }
+
+ .new-tweet {
+     width: 100%;
+     height: 10rem;
+ }
+
+ .main {
+     width: 40%;
+     margin: 0 29.9%;
+ }
