@@ -6,7 +6,7 @@ class TweetsController < ApplicationController
   # GET /tweets or /tweets.json
   def index
     current_user
-    @tweets = Tweet.all.page(params[:page])
+    @tweets = Tweet.page(params[:page])
     @tweet = Tweet.new
   end
 
@@ -31,7 +31,7 @@ class TweetsController < ApplicationController
 
     respond_to do |format|
       if @tweet.save
-        format.html { redirect_to @tweet, notice: "Tweet was successfully created." }
+        format.html { redirect_to root_path, notice: "Tweet was successfully created." }
         format.json { render :show, status: :created, location: @tweet }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,6 +45,18 @@ class TweetsController < ApplicationController
     respond_to do |format|
       if @tweet.update(tweet_params)
         format.html { redirect_to @tweet, notice: "Tweet was successfully updated." }
+        format.json { render :show, status: :ok, location: @tweet }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @tweet.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def retweet
+    respond_to do |format|
+      if @tweet.update(tweet_params)
+        format.html { redirect_to @tweet, notice: "Retweet was successfully updated." }
         format.json { render :show, status: :ok, location: @tweet }
       else
         format.html { render :edit, status: :unprocessable_entity }

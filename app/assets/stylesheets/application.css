@@ -65,3 +65,7 @@ body {
     float: right;
     padding-right: 5px;
  }
+
+ .card-title, .date {
+    color: rgb(0, 123, 164);
+ }

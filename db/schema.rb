@@ -28,8 +28,10 @@ ActiveRecord::Schema.define(version: 2021_03_16_212447) do
     t.string "content", null: false
     t.bigint "user_id"
     t.integer "retweet", default: 0
+    t.bigint "retweet_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["retweet_id"], name: "index_tweets_on_retweet_id"
     t.index ["user_id"], name: "index_tweets_on_user_id"
   end
 
@@ -49,5 +51,6 @@ ActiveRecord::Schema.define(version: 2021_03_16_212447) do
 
   add_foreign_key "likes", "tweets"
   add_foreign_key "likes", "users"
+  add_foreign_key "tweets", "tweets", column: "retweet_id"
   add_foreign_key "tweets", "users"
 end
