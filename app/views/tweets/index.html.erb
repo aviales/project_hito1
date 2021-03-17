@@ -4,7 +4,7 @@
 
 <% if current_user %>
   <div class="thoughts">
-    <h1>What are you thinking?</h1>
+    <h1>Tweet Your Thoughts!</h1>
     <%= render 'form', tweet: @tweet %>
   </div>
 <% end %>  
@@ -17,8 +17,9 @@
     <div class="card-body">
       <h5 class="card-title"><%= tweet.user.username %></h5>
       <p class="card-text"><%= tweet.content %></p>
+      <%= link_to(tweet, :class => 'show') do %>
       <p><%= time_ago_in_words(tweet.created_at) %> ago</p>
-      <%= link_to 'Show', tweet, class: 'btn btn-primary' %> <%= link_to 'Edit', edit_tweet_path(tweet), class: 'btn btn-primary' %> <%= link_to 'Destroy', tweet, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary' %><br />
+      <% end %>
       <p>Retweets: <%= tweet.retweet %></p>
     </div>
   </div>

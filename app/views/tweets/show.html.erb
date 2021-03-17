@@ -1,4 +1,24 @@
 <p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_tweet_path(@tweet) %> |
-<%= link_to 'Back', tweets_path %>
+<div class="main">
+
+  <div class="card my-3" style="width: 30rem;">
+  <%= image_tag(@tweet.user.profile_picture, class: 'card-img-top') %>
+    <div class="card-body">
+        <h5 class="card-title"><%= @tweet.user.username %></h5>
+        <p class="card-text"><%= @tweet.content %></p>
+        <p><%= time_ago_in_words(@tweet.created_at) %> ago</p>
+        <p>Retweets: <%= @tweet.retweet %> | Likes: <%= @tweet.likes.count %></p>
+        <% if @tweet.user_id === current_user.id %>
+          <%= link_to(edit_tweet_path(@tweet)) do %>
+              <i class="fas fa-pen"></i>
+          <% end %>
+
+          <%= link_to(@tweet, :method => 'delete', :data => { confirm: "Are you sure?"}) do %>  
+          <i class="fas fa-trash"></i>
+          <% end %>
+        <% end %>
+
+    </div>
+  </div>
+</div>
