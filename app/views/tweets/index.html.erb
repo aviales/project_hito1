@@ -5,34 +5,48 @@
 <% if current_user %>
   <div class="thoughts">
     <h1>Tweet Your Thoughts!</h1>
+    <%= form_tag tweets_search_path, :method => 'get', class:"form-inline my-4"  do %>
+  <p>
+    <%= text_field_tag :content, params[:content], class:"form-control mr-sm-2" %>
+    <%= submit_tag "Search", :content => nil, class:"btn btn-outline-light my-2 my-sm-0" %>
+  </p>
+<% end %>
     <%= render 'form', tweet: @tweet %>
   </div>
 <% end %>  
 
 <div class="main">
-<% @tweets.reverse.each do |tweet| %>
+<% @tweets.order(created_at: 'DESC').each do |tweet| %>
 
   <div class="card my-3" style="width: 30rem;">
   <%= image_tag(tweet.user.profile_picture, class: 'card-img-top') %>
     <div class="card-body">
       <h5 class="card-title"><%= tweet.user.username %></h5>
+      <% if tweet.retweet.present? %>
+        <p><i>Retweeted from <%= Tweet.find(tweet.retweet_id).user.username %></i></p>
+      <% end %>
       <p class="card-text"><%= tweet.content %></p>
       <%= link_to(tweet, :class => 'show') do %>
-      <p class="date"><%= time_ago_in_words(tweet.created_at) %> ago</p>
+        <p class="date"><%= time_ago_in_words(tweet.created_at) %> ago</p>
       <% end %>
-      <i class="far fa-heart"></i>
-       <%= link_to 'Like', tweet_like_url(tweet), method: :post %> <%= tweet.likes.count %>
-        <%= link_to 'Retweet', tweet_retweet_url(tweet), method: :post %>
+      <p class="like-retweet">Likes: <%= tweet.likes.count %> | Retweets: <%= tweet.retweets.count %></p>
+
+      <% if tweet.likes.where(user_id: current_user).count > 0 %>
+        <%= link_to(tweet_likes_path(tweet.id), :method => 'post', :class => 'button') do %>
+          <i class="fas fa-heart mr-2"></i>
+        <% end %>
+      <% else %>
+        <%= link_to(tweet_likes_path(tweet.id), :method => 'post', :class => 'button') do %>
+          <i class="far fa-heart mr-2"></i>
+        <% end %>
+      <% end %>
+      <%= link_to 'RT', retweet_tweet_path(tweet.id), :method => 'post', :class => 'button' %>
     </div>
   </div>
 <% end %>
 </div>
-  <!-- app/views/home/index.html.erb -->
-...
-<div class="row">
-<div class="col-md-8 offset-md-2">
-<%= paginate @tweets %>
-</div>
-</div>
 
-
+<div class="main">
+  <%= will_paginate @paginated_tweets, :previous_label => '', :next_label => 'Show more tweets' %>
+</div>
+  

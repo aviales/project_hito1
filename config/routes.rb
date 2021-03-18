@@ -1,10 +1,14 @@
 Rails.application.routes.draw do
-  resources :likes
-  resources :tweets do
-    post 'like', to: 'tweets#like'
-    post 'retweet', to: 'tweets#retweet'
+  get "tweets/search"
+  resources :tweets do 
+    
+    resources :likes
+    member do 
+      post 'retweet'
+      get 'retweet'
+    end
   end
+
+  devise_for :users
   root 'tweets#index'
-  get '/tweets/hashtag/:name', to:'tweets#hashtags'
-  devise_for :users, controllers: { registrations: 'users/registrations' }
 end

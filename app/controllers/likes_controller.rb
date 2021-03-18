@@ -1,19 +1,31 @@
 class LikesController < ApplicationController
   before_action :set_like, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
+  before_action :set_tweet
 
   # GET /likes or /likes.json
   def index
     @likes = Like.all
+    @tweets = Tweet.all.page(params[:page]).per(25).order(created_at: :desc)
   end
+
+  def search
+    if params.has_key?(:content)
+    @tweets = Tweet.content(params[:content])
+    else
+      @tweets = Tweet.all
+    end
+  end
+
 
   # GET /likes/1 or /likes/1.json
   def show
+    
   end
 
   # GET /likes/new
   def new
-    @like = Like.new
+    @tweet = Tweet.new
   end
 
   # GET /likes/1/edit
@@ -22,17 +34,19 @@ class LikesController < ApplicationController
 
   # POST /likes or /likes.json
   def create
-    @like = Like.new(like_params)
 
-    respond_to do |format|
-      if @like.save
-        format.html { redirect_to @like, notice: "Like was successfully created." }
-        format.json { render :show, status: :created, location: @like }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @like.errors, status: :unprocessable_entity }
+
+
+    if @tweet.likes.where(user_id: current_user.id).count === 0
+
+      @like = Like.create(tweet_id: @tweet.id, user_id: current_user.id)
+
+    elsif @tweet.likes.where(user_id: current_user.id).count > 0
+      @tweet.likes.where(user_id: current_user.id).each do |like|
+        like.delete
       end
-    end
+    end      
+    redirect_to(root_path)
   end
 
   # PATCH/PUT /likes/1 or /likes/1.json
@@ -59,19 +73,16 @@ class LikesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def is_liked?
-      Like.where(user: current_user.id, tweet: params[:tweet_id]).exists?
+    def set_like
+      @like = Like.find(params[:id])
     end
 
     def set_tweet
-      @tweet = Tweet.find(params[:id])
+      @tweet = Tweet.find(params[:tweet_id]) 
     end
 
     # Only allow a list of trusted parameters through.
     def like_params
       params.fetch(:like, {})
-    end
-    def tweet_params
-      params.require(:tweet).permit(:content, :user_id, :origin_tweet)
     end
 end
